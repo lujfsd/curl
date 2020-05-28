@@ -532,6 +532,8 @@ void Curl_conncache_close_all_connections(struct conncache *connc)
 {
   struct connectdata *conn;
   char buffer[READBUFFER_MIN];
+  if(!connc->closure_handle)
+    return;
   connc->closure_handle->state.buffer = buffer;
   connc->closure_handle->set.buffer_size = READBUFFER_MIN;
 
