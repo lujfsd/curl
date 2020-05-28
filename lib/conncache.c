@@ -531,6 +531,9 @@ Curl_conncache_extract_oldest(struct Curl_easy *data)
 void Curl_conncache_close_all_connections(struct conncache *connc)
 {
   struct connectdata *conn;
+  char buffer[READBUFFER_MIN];
+  connc->closure_handle->state.buffer = buffer;
+  connc->closure_handle->set.buffer_size = READBUFFER_MIN;
 
   conn = conncache_find_first_connection(connc);
   while(conn) {
@@ -547,6 +550,7 @@ void Curl_conncache_close_all_connections(struct conncache *connc)
     conn = conncache_find_first_connection(connc);
   }
 
+  connc->closure_handle->state.buffer = NULL;
   if(connc->closure_handle) {
     SIGPIPE_VARIABLE(pipe_st);
     sigpipe_ignore(connc->closure_handle, &pipe_st);
